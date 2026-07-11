@@ -495,3 +495,81 @@ case Wait:
 The reason why we separate the taskId and workerId is because we should not generate two task's out put to one file. (e.g. If one reducer deals two tasks without this design, the second result will cover the first result since we generate the file mr-out-\* based on the taskId).
 At last, here is the all-pass picture:
 ![[lab1-all-pass.png]]
+
+---
+
+## Refine
+
+After watch the [Lab1 Q&A]([Lecture 6 - Lab 1 Q&A_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV16f4y1z7kn?spm_id_from=333.788.videopod.episodes&vd_source=f9c8d8ef3c9c9806533b95189c09f7c9&p=6)), i do a little refinements to my code by using the sync.Cond.
+My first design in Worker() when it receives a assignment to Wait, it just sleep for 50 milliseconds and do RPC again, which cause the increase of internet usage. So I use sync.Cond to Wait in the RCP call, and be waked up when needed (in allMapDone, some task failure, and allReduceDone). My refinement is as follows:
+```go
+/* ----In mr/worker.go---- */
+func Worker(...) {
+	...
+	if reply.Status == Wait {
+		// Delete the sleep
+		args = WorkerArgs{Status: Wait, WorkerId: reply.WorkerId}
+		continue
+	}
+}
+
+/* ----In mr/coordinator.go---- */
+type Coordinator struct {
+	cond              *sync.Cond
+	...
+}
+
+func (c *Coordinator) Assign(...) error {
+	...
+	switch worker.status {
+	case Wait:
+		switch {
+		case len(c.failTaskFiles) > 0:
+		...
+		case !c.allMapDone && len(c.inputFile) > 0:
+		...
+		case c.interFileCnt > 0 && c.allMapDone:
+		...
+		case c.allReduceDone:
+			c.cond.Broadcast()
+			...
+		default:
+			c.cond.Wait()
+			...
+		}
+	case MapDone:
+		...
+		c.cond.Broadcast()
+		...
+	case ReduceDone:
+		...
+	default:
+		return errors.New("invalid task status")
+	}
+	return nil
+}
+
+func (c *Coordinator) checkWorkerStatus() {
+	for {
+		time.Sleep(time.Second)
+		c.mu.Lock()
+		for _, worker := range c.workerList {
+			// Refine the logic
+			if worker.status != Wait && time.Now().After(worker.deadLine) && worker.status != Exit {
+				c.failTaskFiles = append(c.failTaskFiles, Task{worker.taskId, worker.status, worker.files})
+				c.workerList[worker.workerId].status = Exit
+				c.aliveWorker--
+				c.cond.Broadcast()
+			}
+		}
+		c.mu.Unlock()
+	}
+}
+
+func MakeCoordinator(...) *Coordinator {
+	...
+	c.cond = sync.NewCond(&c.mu)
+	...
+}
+
+```
