@@ -7,7 +7,7 @@
 	4. When a reduce-worker is notified (*in the lab we notify the reduce-workers after all map-workers are done*) by the master about these locations, it uses *RPC* to read the buffered data from the local disks of the map-workers. When a reduce-worker has read all intermediate data, it sorts it by the intermediate keys so that all occurrences of the same key are grouped together. The sorting is needed because typically many different keys map to the same reduce task. If the amount of intermediate data is too large to fit in memory, an external sort is used.
 	5. The reduce worker iterates over the sorted intermediate data and for each unique intermediate key encountered, it passes the key and the corresponding set of intermediate values to the user’s Reduce function. The output of the Reduce function is appended to a final output file for this reduce partition (*with the file name of mr-out-Y*).
 	6. When all map tasks and reduce tasks have been completed, the master wakes up the user program. At this point, the MapReduce call in the user program returns back to the user code.
-	![[mapreduce-workflow.png|820]]
+	![[pictures/mapreduce-workflow.png|820]]
 
 > [!Hint] Hints
 > 1. Only modify mr/worker.go, mr/coordinator.go and mr/rpc.go.
@@ -27,8 +27,7 @@
 As the hints say, I start at the Worker() function in mr/worker.go. I first structured the Worker().
 ```go
 // main/mrworker.go calls this function.
-func Worker(sockname string, mapf func(string, string) []KeyValue,
-	reducef func(string, []string) string) {
+func Worker(sockname string, mapf func(string, string) []KeyValue, reducef func(string, []string) string) {
 
 	coordSockName = sockname
 	args := WorkerArgs{Status: Wait, IsFirstCall: true}
@@ -472,7 +471,7 @@ case Wait:
 ```
 The reason why we separate the taskId and workerId is because we should not generate two task's out put to one file. (e.g. If one reducer deals two tasks without this design, the second result will cover the first result since we generate the file mr-out-\* based on the taskId).
 At last, here is the all-pass picture:
-![[lab1-all-pass.png]]
+![[pictures/lab1-all-pass.png]]
 
 ---
 

@@ -8,7 +8,7 @@
         "type": "tabs",
         "children": [
           {
-            "id": "b71e00201ea9095b",
+            "id": "4fc1126047a8c6a3",
             "type": "leaf",
             "state": {
               "type": "markdown",
@@ -22,7 +22,7 @@
             }
           },
           {
-            "id": "4fc1126047a8c6a3",
+            "id": "e26db6e3d2ccfd1e",
             "type": "leaf",
             "state": {
               "type": "markdown",
@@ -242,13 +242,18 @@
   },
   "active": "5bfd5641351373e5",
   "lastOpenFiles": [
-    "Paxos.md",
-    "Lab1-MapReduce.md",
-    "Untitled",
+    "pictures/mapreduce-workflow.png",
+    "pictures/lab2-task4-all-pass.png",
     "pictures/lab1-all-pass.png",
+    "Lab1-MapReduce.md",
+    "Lab2-KVServer.md",
+    "pictures/lab2-task3-all-pass.png",
+    "pictures/lab2-task2-all-pass.png",
+    "Paxos.md",
+    "pictures/lab2-task1-all-pass.png",
+    "Untitled",
     "Untitled.base",
     "pictures",
-    "pictures/mapreduce-workflow.png",
     "rust_temp.md",
     "temp.md",
     "Spring/SpringCloud/Sentinel.md",
@@ -273,19 +278,12 @@
     "Pasted image 20251215210801.png",
     "DesignPatterns/Principles/DependencyInvertion.md",
     "DesignPatterns/Principles/Open-Closed.md",
-    "Pasted image 20251215002814.png",
-    "Pasted image 20251214210641.png",
-    "Pasted image 20251215203629.png",
     "DesignPatterns/Strategy.md",
-    "Pasted image 20251215154602.png",
-    "Pasted image 20251215154130.png",
     "DesignPatterns/Principles",
     "Untitled 1",
     "DesignPatterns",
     "Spring/Utils/MP.md",
     "Spring/Utils/Jwt.md",
-    "Spring/Utils/HttpClient.md",
-    "Spring/Utils/AOP.md",
     "Gateway.pdf",
     "Spring/SpringCloud",
     "Untitled.canvas"
