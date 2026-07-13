@@ -27,12 +27,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Lab1-MapReduce.md",
-                "mode": "source",
+                "file": "Paxos.md",
+                "mode": "preview",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Lab1-MapReduce"
+              "title": "Paxos"
             }
           }
         ],
@@ -170,13 +170,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Lab1-MapReduce.md",
+                "file": "Paxos.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of Lab1-MapReduce"
+              "title": "Outline of Paxos"
             }
           },
           {
@@ -242,14 +242,15 @@
   },
   "active": "5bfd5641351373e5",
   "lastOpenFiles": [
+    "Go-Patterns-Lecture-5.md",
+    "Paxos.md",
+    "Lab2-KVServer.md",
+    "Lab1-MapReduce.md",
     "pictures/mapreduce-workflow.png",
     "pictures/lab2-task4-all-pass.png",
     "pictures/lab1-all-pass.png",
-    "Lab1-MapReduce.md",
-    "Lab2-KVServer.md",
     "pictures/lab2-task3-all-pass.png",
     "pictures/lab2-task2-all-pass.png",
-    "Paxos.md",
     "pictures/lab2-task1-all-pass.png",
     "Untitled",
     "Untitled.base",
