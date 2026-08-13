@@ -137,13 +137,7 @@ The central snapshot idea is that removing storage is not the same as removing h
 The final implementation adds snapshot and replication-worker state to the Lab 3B fields:
 
 ```go
-currentTerm     int
-votedFor        int
 log             []LogEntry
-commitIndex     int
-lastApplied     int
-nextIndex       []int
-matchIndex      []int
 index0          int
 snapshot        []byte
 pendingSnapshot *raftapi.ApplyMsg
@@ -152,18 +146,18 @@ replicateCh     []chan struct{}
 
 ### Persistent and volatile state
 
-| State | Persistent? | Reason |
-|---|---|---|
-| `currentTerm` | Yes | A restart must not move a peer into an older term. |
-| `votedFor` | Yes | A restart must not permit two votes in one term. |
-| `log` | Yes | Accepted history must survive a crash. |
-| `index0` | Yes | It defines the logical index represented by `log[0]`. |
-| `snapshot` | Yes, separately | It reconstructs service state through `index0`. |
-| `commitIndex` | No | The current leader re-establishes commitment; restart initializes it at the durable snapshot boundary. |
-| `lastApplied` | No | It tracks delivery in the current process; restart initializes it at the snapshot boundary. |
-| `nextIndex`, `matchIndex` | No | They are leader-local replication progress and are rebuilt after election. |
-| `pendingSnapshot` | No | It is an in-process delivery event. |
-| `replicateCh` | No | It is an in-process scheduling mechanism. |
+| State                     | Persistent?     | Reason                                                                                                 |
+| ------------------------- | --------------- | ------------------------------------------------------------------------------------------------------ |
+| `currentTerm`             | Yes             | A restart must not move a peer into an older term.                                                     |
+| `votedFor`                | Yes             | A restart must not permit two votes in one term.                                                       |
+| `log`                     | Yes             | Accepted history must survive a crash.                                                                 |
+| `index0`                  | Yes             | It defines the logical index represented by `log[0]`.                                                  |
+| `snapshot`                | Yes, separately | It reconstructs service state through `index0`.                                                        |
+| `commitIndex`             | No              | The current leader re-establishes commitment; restart initializes it at the durable snapshot boundary. |
+| `lastApplied`             | No              | It tracks delivery in the current process; restart initializes it at the snapshot boundary.            |
+| `nextIndex`, `matchIndex` | No              | They are leader-local replication progress and are rebuilt after election.                             |
+| `pendingSnapshot`         | No              | It is an in-process delivery event.                                                                    |
+| `replicateCh`             | No              | It is an in-process scheduling mechanism.                                                              |
 
 The compacted log obeys these structural invariants:
 
@@ -1343,7 +1337,7 @@ A heartbeat round can therefore overlap the dedicated worker for the same follow
 
 > Serial ownership of the main retry/catch-up path with coalesced Start notifications, substantially reducing same-follower RPC amplification.
 
-A future cleanup should route heartbeat notifications through the same `replicateCh[server]` instead of directly launching `replicate(server)`. That would make the one-owner invariant apply to every replication trigger.
+Why the `heartBeat()` acts like this is because the heart beat should be surely forwarded to followers. Otherwise the follower may miss some heart beat and start a new election.
 
 ---
 
@@ -1674,11 +1668,6 @@ The comparison always states the sample sizes: one old run versus a ten-run new 
 - `Persister` models durable storage but does not model fsync ordering, torn writes, disk corruption, or storage latency.
 - Membership changes and joint consensus are not implemented.
 - Byzantine peers and malicious snapshot data are outside the failure model.
-- The main Start-driven catch-up path is serialized, but `heartBeat()` still launches `go rf.replicate(server)` directly. Routing heartbeats through `replicateCh` would make per-follower ownership complete.
-- A transport failure makes the dedicated worker retry immediately; the current code has no per-follower retry backoff for a long disconnection.
-- The follower's AppendEntries prefix guard checks `PrevLogIndex > lastLogIndex` but not `PrevLogIndex < index0`. A hardened implementation should reject or reconcile a stale RPC before calling `Log(PrevLogIndex)`.
-- Replication workers do not have an explicit shutdown path in this Lab implementation.
-- The saved test logs establish behavior under the course tester, not production throughput, latency, or durability.
 
 ---
 

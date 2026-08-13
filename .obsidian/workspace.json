@@ -69,12 +69,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Lab3B-Raft-Log-Replication.md",
+                "file": "Lab3C_3D-Raft-Persist_Snapshot.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Lab3B-Raft-Log-Replication"
+              "title": "Lab3C_3D-Raft-Persist_Snapshot"
             }
           }
         ],
@@ -214,7 +214,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Lab3B-Raft-Log-Replication.md",
+                "file": "Lab3C_3D-Raft-Persist_Snapshot.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
@@ -286,9 +286,9 @@
   },
   "active": "2bcf1a1c1e83d27c",
   "lastOpenFiles": [
+    "Lab3B-Raft-Log-Replication.md",
     "Lab3A-Raft-Leader-Election.md",
     "Lab3C_3D-Raft-Persist_Snapshot.md",
-    "Lab3B-Raft-Log-Replication.md",
     "Lab3C&3D-Raft-Persist&Snapshot.md",
     "Lab2-KVServer.md",
     "Lab3B-Zhihu-Draft.md",
